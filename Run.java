@@ -18,20 +18,20 @@ class Run {
 
   public static void main(String[] args) {
 
-  if(args.length == 2) {
+    if(args.length == 2) {
 
-    double k = 1.0;
-    int size = Integer.parseInt(args[0]);
-    double T = Double.parseDouble(args[1]);
-    double beta = (1.0 /(k * T));
-    DrawLattice draw = new DrawLattice(size, beta);
+      double k = 1.0;
+      int size = Integer.parseInt(args[0]);
+      double T = Double.parseDouble(args[1]);
+      double beta = (1.0 /(k * T));
+      DrawLattice draw = new DrawLattice(size, beta);
 
-    draw.runMetropolis();
+      draw.runMetropolis();
     }
-  else {
-    System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");
-    System.out.println("java Run $size $temperature\n");
-  }
+    else {
+      System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");
+      System.out.println("java Run $size $temperature\n");
+    }
   }
 }
 
