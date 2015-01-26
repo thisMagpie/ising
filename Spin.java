@@ -41,7 +41,7 @@ class Spin {
   }
 
   /**
-   * energyDiff
+   * deltaE
    *
    * @m       The mth coordinate of the selected spin
    * @n       The nth coordinate of the selected spin
@@ -49,8 +49,9 @@ class Spin {
    *          top, bottom, left and right nearest neighbours minus
    *          the combined energy of the selected spin flipped plus
    *          its top, bottom, left and right nearest neighbours
+   *          i.e. 2.0*J*sum*box[m][n] with J=1
    */
-  public static double energyDiff(int[][] box, int m, int n) {
+  public static double deltaE(int[][] box, int m, int n) {
     int sum = 0;
     int max = box.length-1;
     // spacial symmetry
@@ -74,8 +75,8 @@ class Spin {
     else
       sum += box[m][n + 1]; // look downwards
 
-    //spin flipped state - original state
-    return ((-1.0 * box[m][n]) + sum) - (box[m][n] + sum);
+    //spin flipped state - original state i.e. 2.0*J*sum*box[m][n] with J=1
+    return 2.0 * sum *  box[m][n];
   }
 
   /**
