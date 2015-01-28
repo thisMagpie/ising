@@ -55,6 +55,7 @@ class DrawLattice extends Canvas {
     image = createImage(dims,dims);
     graphics = image.getGraphics();
 
+    // Initialise box
     box = new int[size][size];
     for (int i = 0; i < size; i++) {
       for (int j = 0; j < size; j++) {
