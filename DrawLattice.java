@@ -36,7 +36,6 @@ class DrawLattice extends Canvas {
   DrawLattice (int size, double beta) {
     Frame frame = new Frame("Ising Simulation");
     Panel panel = new Panel();
-
     this.size = size;
     this.beta = beta;
     pixelDims = 4;
