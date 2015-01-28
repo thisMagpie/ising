@@ -78,7 +78,7 @@ class DrawLattice extends Canvas {
       int m = Spin.pick(size);
       int n = Spin.pick(size);
       // check if energy meets threshold
-      if (Spin.threshold(Spin.deltaE(box, m, n), beta)){
+      if (Spin.threshold(Spin.deltaE(box, m, n), beta)) {
         box[m][n] *= -box[m][n];
         paintPixels(m, n);
         repaint();
