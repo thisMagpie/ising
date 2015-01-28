@@ -113,7 +113,7 @@ class DrawLattice extends Canvas {
   * @j          The jth dims of the box array as an int
   */
   public void paintPixels(int i, int j) {
-    if (box[i][j] == 1)  graphics.setColor(new Color(240,240,255));
+    if (box[i][j] == 1) graphics.setColor(new Color(240,240,255));
     else graphics.setColor(new Color(30,124,25));
       graphics.fillRect(i * pixelDims,
                         j * pixelDims,
