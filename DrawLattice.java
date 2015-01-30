@@ -83,11 +83,6 @@ class DrawLattice extends Canvas {
         paintPixels(m, n);
         repaint();
       }
-      try {
-        Thread.sleep(4);
-      } catch (InterruptedException e) {
-        e.getCause();
-      }
     }
   }
 
