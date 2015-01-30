@@ -50,7 +50,7 @@ class Spin {
   *          its spin flipped
   */
   public static int[][] flip (int[][] box, int m, int n) {
-    box[m][n] *= -box[m][n];
+    box[m][n] = -box[m][n];
     return box; 
   }
   /**
