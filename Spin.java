@@ -90,7 +90,8 @@ class Spin {
    */
   public static boolean threshold(double deltaE, double beta){
     boolean result = false;
-    if ((deltaE < 0.0) || Math.random() < Math.exp(-(deltaE * beta)))
+
+    if ((deltaE <= 0.0) || Math.random() < Math.exp(-(deltaE * beta)))
       result = true;
     return result;
   }
