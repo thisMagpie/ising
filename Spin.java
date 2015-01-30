@@ -40,19 +40,6 @@ class Spin {
     return (int) (Math.random() * size); 
   }
 
- /**
-  * flip
-  *
-  * @box     The box of size, containing the spins as 2D integer array
-  * @m       The mth coordinate of the selected spin
-  * @n       The nth coordinate of the selected spin
-  * @return  The box of size, containing the spins as 2D integer array with
-  *          its spin flipped
-  */
-  public static int[][] flip (int[][] box, int m, int n) {
-    box[m][n] = -box[m][n];
-    return box; 
-  }
   /**
    * deltaE
    *
