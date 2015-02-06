@@ -26,6 +26,14 @@ class Run {
 
       System.out.printf("\nsize = %d T = %g Dynamics = %s\n", size, T, dynamics);
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
+      switch (dynamics) {
+      case "glauber":
+        draw.runGlauber();
+        break;
+      case "kawazaki":
+        draw.runKawazaki();
+        break;
+      }
     }
     else {
       System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");

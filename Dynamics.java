@@ -57,19 +57,6 @@ class Dynamics {
     return 2.0 * sum *  box[m][n];
   }
 
-  public static boolean pick(String dynamics, int[][] box, double beta, int m, int n) {
-    boolean reached = false;
-    switch (dynamics) {
-      case "glauber":
-      reached = glauber(metropolis(box, m, n), beta);
-      break;
-      case "kawazaki":
-      reached = kawazaki(metropolis(box, m, n), beta);
-      break;
-    }
-    return reached;
-  }
-
   /**
    * glauber
    *

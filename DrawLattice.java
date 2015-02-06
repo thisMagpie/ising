@@ -23,6 +23,7 @@ class DrawLattice extends Canvas {
   Graphics graphics;
   Image image;
   int dims;
+  double totalM_0, totalM_1;
   double beta;
   boolean timerOn;
   String dynamics;
@@ -79,30 +80,77 @@ class DrawLattice extends Canvas {
           paintPixels(i,j);
       }
     }
+    totalM_0 = Magnetism.total(box);
+
     frame.setVisible(true);
-    run();
   }
 
  /**
-  * run:
+  * runGlauber:
   *     Method to call for running initialised simulation
   *     CTRL+C to exit.
   */
-  public void run() {
+  public void runGlauber() {
     timerOn = true;
+    int count = 0;
+    int totalMagnetism = 0;
 
     while (timerOn) {
+      count++;
       // pick random spin in lattice
       int m = Spin.pick(size);
       int n = Spin.pick(size);
 
       // check if energy meets threshold
-      if (Dynamics.pick(dynamics, box, beta, m, n)) {
+      if (Dynamics.glauber(Dynamics.metropolis(box, m, n), beta)) {
         box[m][n] = -box[m][n];
         paintPixels(m, n);
         repaint();
+      }        
+      if (count >= size * size) {
+        totalM_1 = Magnetism.total(box);
       }
     }
+    System.out.println("Total Glauber Magnetism " + totalM_1);
+    System.out.println("Glauber Susceptability " + Magnetism.susceptibility(beta, size, totalM_0,totalM_1));  
+  }
+
+ /**
+  * runKawazaki:
+  *     Method to call for running initialised simulation
+  *     CTRL+C to exit.
+  */
+  public void runKawazaki() {
+    timerOn = true;
+    int count = 0;
+    int totalMagnetism = 0;
+
+    while (timerOn) {
+      count++;
+      // pick random spin in lattice
+      int m_0 = Spin.pick(size);
+      int n_0 = Spin.pick(size);
+      int m_1 = Spin.pick(size);
+      int n_1 = Spin.pick(size);
+
+      double dE_0 = Dynamics.metropolis(box, m_0, n_0); 
+      double dE_1 = Dynamics.metropolis(box, m_1, n_1); 
+      // check if energy meets threshold
+      if (Dynamics.kawazaki((dE_0), beta)) {
+        box[m_0][n_0] = -box[m_0][n_0];
+        paintPixels(n_0, m_0);
+      }
+      if (Dynamics.kawazaki((dE_1), beta)) {
+        box[m_1][n_1] = -box[m_1][n_1];
+        paintPixels(m_1, m_1);
+        repaint();
+      }
+      if (count >= size * size) {
+        totalM_1 = Magnetism.total(box);
+      }
+    }
+    System.out.println("Total Kawazaki Magnetism " + totalMagnetism);
+    System.out.println("Kawazaki Susceptability " + Magnetism.susceptibility(beta, size, totalM_0,totalM_1));       
   }
 
  /**
