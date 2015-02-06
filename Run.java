@@ -30,7 +30,7 @@ class Run {
     }
     else {
       System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");
-      System.out.println("java Run $size $temperature\n");
+      System.out.println("java Run $size $temperature $dynamics\n");
     }
   }
 }
