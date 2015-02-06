@@ -25,8 +25,7 @@ class Run {
       double beta = (1.0 /(k * T));
 
       System.out.printf("\nsize = %d T = %g Dynamics = %s\n", size, T, dynamics);
-      DrawLattice draw = new DrawLattice(size, beta);
-      draw.run(dynamics);
+      DrawLattice draw = new DrawLattice(size, beta, dynamics);
     }
     else {
       System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");

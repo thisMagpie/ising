@@ -24,6 +24,8 @@ class DrawLattice extends Canvas {
   Image image;
   int dims;
   double beta;
+  boolean timerOn;
+  String dynamics;
 
  /**
   * DrawLattice:
@@ -33,11 +35,15 @@ class DrawLattice extends Canvas {
   * @beta        The value of betaerature for the simulation as a double
   * @nn          A NearestNeighbour object
   */
-  DrawLattice (int size, double beta) {
+  DrawLattice (int size, double beta, String dynamics) {
     Frame frame = new Frame("Ising Simulation");
+    Button button = new Button("Stop Simulation");
+
     Panel panel = new Panel();
     this.size = size;
     this.beta = beta;
+    this.dynamics = dynamics;
+
     pixelDims = 4;
     dims = size * pixelDims;
 
@@ -50,6 +56,16 @@ class DrawLattice extends Canvas {
     frame.add(panel);
     panel.add(this);
     setSize(dims,dims);
+    Panel controlPanel = new Panel();
+    frame.add(controlPanel,BorderLayout.SOUTH);
+
+    button.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        timerOn = !timerOn;
+      }
+    });
+
+    controlPanel.add(button);
     frame.pack();
     image = createImage(dims,dims);
     graphics = image.getGraphics();
@@ -64,6 +80,7 @@ class DrawLattice extends Canvas {
       }
     }
     frame.setVisible(true);
+    run();
   }
 
  /**
@@ -71,9 +88,8 @@ class DrawLattice extends Canvas {
   *     Method to call for running initialised simulation
   *     CTRL+C to exit.
   */
-  public void run(String dynamics) {
-    boolean timerOn = true;
-    boolean reached = false;
+  public void run() {
+    timerOn = true;
 
     while (timerOn) {
       // pick random spin in lattice
