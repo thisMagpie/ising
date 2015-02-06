@@ -79,6 +79,7 @@ class DrawLattice extends Canvas {
       // pick random spin in lattice
       int m = Spin.pick(size);
       int n = Spin.pick(size);
+
       // check if energy meets threshold
       if (Dynamics.pick(dynamics, box, beta, m, n)) {
         box[m][n] = -box[m][n];
