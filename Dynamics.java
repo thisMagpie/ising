@@ -71,7 +71,7 @@ class Dynamics {
   }
 
   /**
-   * thresholdGlauber
+   * glauber
    *
    * @deltaE  Difference in energy
    * @beta    beta = 1/kT as a double value
@@ -88,7 +88,7 @@ class Dynamics {
   }
 
   /**
-   * thresholdKawazaki
+   * kawazaki
    *
    * @deltaE  Difference in energy
    * @beta    beta = 1/kT as a double value
