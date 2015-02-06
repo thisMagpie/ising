@@ -88,10 +88,19 @@ class Spin {
    * @return  Whether the energy has reached the threshold neccessary to flip
    *          its spin, as a boolean.
    */
-  public static boolean threshold(double deltaE, double beta){
+  public static boolean thresholdGlauber(double deltaE, double beta){
     boolean result = false;
 
     if ((deltaE <= 0.0) || Math.random() < Math.exp(-(deltaE * beta)))
+      result = true;
+    return result;
+  }
+
+  public static boolean thresholdKawazaki(double deltaE, double beta) {
+    boolean result = false;
+    if ((deltaE <= 0 && beta == 0) ||
+        (Math.random() < Math.exp(-(deltaE * beta))/(1 + Math.exp(-(deltaE * beta)))))
+
       result = true;
     return result;
   }

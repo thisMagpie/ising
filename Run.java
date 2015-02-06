@@ -17,16 +17,28 @@
 class Run {
 
   public static void main(String[] args) {
-
-    if(args.length == 2) {
-
-      double k = 1.0;
+    double k = 1.0;
+    if(args.length == 3) {
       int size = Integer.parseInt(args[0]);
       double T = Double.parseDouble(args[1]);
+      String dynamics = args[2];
       double beta = (1.0 /(k * T));
+
+      System.out.printf("\nsize = %d T = %g Dynamics = %s\n", size, T, dynamics);
+
       DrawLattice draw = new DrawLattice(size, beta);
 
-      draw.runMetropolis();
+      switch (dynamics) {
+      case "glauber":
+        System.out.printf("\nGlauber selected.\n");
+        draw.runMetropolis();
+        break;
+
+      case "kawazaki":
+        System.out.printf("\nKawazaki selected.\n");
+        draw.runKawazaki();
+        break;
+      }
     }
     else {
       System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");
