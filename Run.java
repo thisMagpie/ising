@@ -25,20 +25,8 @@ class Run {
       double beta = (1.0 /(k * T));
 
       System.out.printf("\nsize = %d T = %g Dynamics = %s\n", size, T, dynamics);
-
       DrawLattice draw = new DrawLattice(size, beta);
-
-      switch (dynamics) {
-      case "glauber":
-        System.out.printf("\nGlauber selected.\n");
-        draw.runMetropolis();
-        break;
-
-      case "kawazaki":
-        System.out.printf("\nKawazaki selected.\n");
-        draw.runKawazaki();
-        break;
-      }
+      draw.run(dynamics);
     }
     else {
       System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");

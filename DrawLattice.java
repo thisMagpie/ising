@@ -71,35 +71,25 @@ class DrawLattice extends Canvas {
   *     Method to call for running initialised simulation
   *     CTRL+C to exit.
   */
-  public void runMetropolis() {
+  public void run(String dynamics) {
     boolean timerOn = true;
+    boolean reached = false;
+
     while (timerOn) {
       // pick random spin in lattice
       int m = Spin.pick(size);
       int n = Spin.pick(size);
       // check if energy meets threshold
-      if (Spin.thresholdGlauber(Spin.deltaE(box, m, n), beta)) {
-        box[m][n] = -box[m][n];
-        paintPixels(m, n);
-        repaint();
+      switch (dynamics) {
+      case "glauber":
+        reached = Spin.thresholdGlauber(Spin.deltaE(box, m, n), beta);
+        break;
+      case "kawazaki":
+        reached = Spin.thresholdKawazaki(Spin.deltaE(box, m, n), beta);
+        break;
       }
-    }
-  }
 
- /**
-  * runGlauber:
-  *     Method to call for running initialised simulation
-  *     CTRL+C to exit.
-  */
-  public void runKawazaki() {
-    boolean timerOn = true;
-    while (timerOn) {
-      // pick random spin in lattice
-      int m = Spin.pick(size);
-      int n = Spin.pick(size);
-
-      // check if energy meets threshold
-      if (Spin.thresholdKawazaki(Spin.deltaE(box, m, n), beta)) {
+      if (reached) {
         box[m][n] = -box[m][n];
         paintPixels(m, n);
         repaint();
