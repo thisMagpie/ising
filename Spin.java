@@ -91,7 +91,7 @@ class Spin {
   public static boolean thresholdGlauber(double deltaE, double beta){
     boolean result = false;
 
-    if ((deltaE <= 0.0) || Math.random() < Math.exp(-(deltaE * beta)))
+    if ((deltaE <= 0.0 && beta == 0) || Math.random() < Math.exp(-(deltaE * beta)))
       result = true;
     return result;
   }
