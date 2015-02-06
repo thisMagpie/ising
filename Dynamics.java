@@ -11,7 +11,6 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>
- *
  */
 import java.lang.Math.*;
 
@@ -55,6 +54,43 @@ class Dynamics {
 
     //spin flipped state - original state i.e. 2.0*J*sum*box[m][n] with J=1
     return 2.0 * sum *  box[m][n];
+  }
+
+  public static boolean nearestNeighbour(int[][] box, int m_0, int n_0, int m_1, int n_1) {
+    boolean result = false;
+    int sum = 0;
+    int max = box.length-1;
+    // spacial symmetry
+    if (m_0 == 0) {
+      if (box[max][n_0] == box[m_1][n_1])
+        result = true;
+    } else if (box[m_0 - 1][n_0] == box[m_1][n_1]) {
+      result = true;
+    }
+
+    if (n_0 == 0) {
+      if (box[m_0][max] == box[m_1][n_1])
+      result = true;
+    } else if (box[m_0][n_0 - 1] == box[m_1][n_1]) {
+      result = true;
+    }
+
+    if (m_0 == max) {
+      if (box[0][n_0] == box[m_1][n_1])
+        result = true;
+    } else if (box[m_0 + 1][n_0] == box[m_1][n_1]) {
+      result = true;
+    }
+
+
+    if (n_0 == max) {
+      if (box[m_0][0] == box[m_1][n_1])
+        result = true;
+    } else if (box[m_0][n_0 + 1] == box[m_1][n_1]) {
+        result = true;
+    }
+
+    return result;
   }
 
   /**

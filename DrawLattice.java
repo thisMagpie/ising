@@ -133,18 +133,18 @@ class DrawLattice extends Canvas {
       int m_1 = Spin.pick(size);
       int n_1 = Spin.pick(size);
 
-      double dE_0 = Dynamics.metropolis(box, m_0, n_0); 
-      double dE_1 = Dynamics.metropolis(box, m_1, n_1); 
+
+      double dE_0 = Dynamics.metropolis(box, m_0, n_0);
+      double dE_1 = Dynamics.metropolis(box, m_1, n_1);
+
       // check if energy meets threshold
-      if (Dynamics.kawazaki((dE_0), beta)) {
-        box[m_0][n_0] = -box[m_0][n_0];
-        paintPixels(n_0, m_0);
-      }
-      if (Dynamics.kawazaki((dE_1), beta)) {
+      if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
         box[m_1][n_1] = -box[m_1][n_1];
-        paintPixels(m_1, m_1);
+        box[m_0][n_0] = -box[m_0][n_0];
+        paintPixels(m_0, n_0);
+        paintPixels(m_1, n_1);
         repaint();
-      }
+      }        
       if (count >= size * size) {
         totalM_1 = Magnetism.total(box);
       }
