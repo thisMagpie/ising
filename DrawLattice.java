@@ -67,7 +67,7 @@ class DrawLattice extends Canvas {
   }
 
  /**
-  * runMetropolis:
+  * run:
   *     Method to call for running initialised simulation
   *     CTRL+C to exit.
   */
@@ -80,16 +80,7 @@ class DrawLattice extends Canvas {
       int m = Spin.pick(size);
       int n = Spin.pick(size);
       // check if energy meets threshold
-      switch (dynamics) {
-      case "glauber":
-        reached = Spin.thresholdGlauber(Spin.deltaE(box, m, n), beta);
-        break;
-      case "kawazaki":
-        reached = Spin.thresholdKawazaki(Spin.deltaE(box, m, n), beta);
-        break;
-      }
-
-      if (reached) {
+      if (Dynamics.pick(dynamics, box, beta, m, n)) {
         box[m][n] = -box[m][n];
         paintPixels(m, n);
         repaint();
