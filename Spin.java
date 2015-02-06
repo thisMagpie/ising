@@ -81,7 +81,7 @@ class Spin {
   }
 
   /**
-   * threshold
+   * thresholdGlauber
    *
    * @deltaE  Difference in energy
    * @beta    beta = 1/kT as a double value
@@ -96,6 +96,14 @@ class Spin {
     return result;
   }
 
+  /**
+   * thresholdKawazaki
+   *
+   * @deltaE  Difference in energy
+   * @beta    beta = 1/kT as a double value
+   * @return  Whether the energy has reached the threshold neccessary to flip
+   *          its spin, as a boolean.
+   */
   public static boolean thresholdKawazaki(double deltaE, double beta) {
     boolean result = false;
     if ((deltaE <= 0 && beta == 0) ||
