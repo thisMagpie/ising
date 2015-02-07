@@ -16,10 +16,17 @@
 
 class Lattice {
 
-  public static int[][] init (int size) {
-    int[][] box = new int[size][size];
+  String dynamics;
+  int size;
+  double beta;
+  int[][] box;
 
-    System.out.println();
+  public Lattice(int size, double beta, String dynamics) {
+    this.size = size;
+    this.beta = beta;
+    this.dynamics = dynamics;
+
+    box = new int[size][size];
     for (int i = 0; i < size; i++) {
       for (int j = 0; j < size; j++) {
         box[i][j] = 1;
