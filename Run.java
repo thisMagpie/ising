@@ -21,17 +21,29 @@ class Run {
     if(args.length == 3) {
       int size = Integer.parseInt(args[0]);
       double T = Double.parseDouble(args[1]);
+      double Tplot = 0.0001;
       String dynamics = args[2];
       double beta = (1.0 /(k * T));
 
+      double betaPlot = (1.0 /(k * Tplot));
+
       System.out.printf("\nsize = %d T = %g Dynamics = %s\n", size, T, dynamics);
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
+      Lattice plot = new Lattice(size);
       switch (dynamics) {
       case "glauber":
         draw.runGlauber();
+        while (Tplot < size * size) {
+          Tplot += 0.2;
+          plot.flipGlauber(1.0 /(k * Tplot));
+        }
         break;
       case "kawazaki":
         draw.runKawazaki();
+        while (Tplot < size * size) {
+          Tplot += 0.2;
+          plot.flipKawazaki(1.0 /(k * Tplot));
+        }
         break;
       }
     }

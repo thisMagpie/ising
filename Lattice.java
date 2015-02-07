@@ -36,48 +36,38 @@ class Lattice {
   * plotGlauber:
   *     Method to call for plotting Glauber dynamics TODO finish
   */
-  public void plotGlauber(double beta) {
-    int count = 0;
+  public void flipGlauber(double beta) {
+    // pick random spin in lattice
+    int m = Spin.pick(size);
+    int n = Spin.pick(size);
 
-    while (count < (size * size)) {
-      count++;
-      // pick random spin in lattice
-      int m = Spin.pick(size);
-      int n = Spin.pick(size);
-
-      // check if energy meets threshold
-      if (Dynamics.glauber(Dynamics.metropolis(box, m, n), beta)) {
-        box[m][n] = -box[m][n];
-      }
+    // check if energy meets threshold
+    if (Dynamics.glauber(Dynamics.metropolis(box, m, n), beta)) {
+      box[m][n] = -box[m][n];
     }
   }
 
  /**
-  * plotKawazaki:
+  * flipKawazaki:
   *     Method to call for plotting Kawazaki dynamics TODO finish
   */
-  public void plotKawazaki(double beta) {
-    int count = 0;
-    double susceptibility = 0;
+  public void flipKawazaki(double beta) {
+    // pick two random spins in lattice
+    int m_0 = Spin.pick(size);
+    int n_0 = Spin.pick(size);
+    int m_1 = Spin.pick(size);
+    int n_1 = Spin.pick(size);
 
-    while (count < (size * size)) {
-      count++;
-      // pick random spin in lattice
-      int m_0 = Spin.pick(size);
-      int n_0 = Spin.pick(size);
-      int m_1 = Spin.pick(size);
-      int n_1 = Spin.pick(size);
+    if (Dynamics.nearestNeighbour(box, m_0, n_0, m_1, n_1) &
+        Dynamics.nearestNeighbour(box, m_1, n_1, m_0, n_0)) {
 
-      if (Dynamics.nearestNeighbour(box, m_0, n_0, m_1, n_1) &
-          Dynamics.nearestNeighbour(box, m_1, n_1, m_0, n_0)) {
-        double dE_0 = Dynamics.metropolis(box, m_0, n_0);
-        double dE_1 = Dynamics.metropolis(box, m_1, n_1);
+      double dE_0 = Dynamics.metropolis(box, m_0, n_0);
+      double dE_1 = Dynamics.metropolis(box, m_1, n_1);
 
-        // check if energy meets threshold
-        if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
-          box[m_1][n_1] = -box[m_1][n_1];
-          box[m_0][n_0] = -box[m_0][n_0];
-        }
+      // check if energy meets threshold
+      if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
+        box[m_1][n_1] = -box[m_1][n_1];
+        box[m_0][n_0] = -box[m_0][n_0];
       }
     }
   }
