@@ -94,6 +94,7 @@ class DrawLattice extends Canvas {
     timerOn = true;
     int count = 0;
     int totalMagnetism = 0;
+    double susceptibility = 0;
 
     while (timerOn) {
       count++;
@@ -106,13 +107,14 @@ class DrawLattice extends Canvas {
         box[m][n] = -box[m][n];
         paintPixels(m, n);
         repaint();
-      }        
-      if (count >= size * size) {
-        totalM_1 = Magnetism.total(box);
       }
+      if (count >= size * size) {
+        totalMagnetism = Magnetism.total(box);
+      }
+      susceptibility = Magnetism.susceptibility(beta, size ,totalMagnetism, Magnetism.total(box));
     }
     System.out.println("Total Glauber Magnetism " + totalM_1);
-    System.out.println("Glauber Susceptability " + Magnetism.susceptibility(beta, size, totalM_0,totalM_1));  
+    System.out.println("Glauber Susceptability " + susceptibility);
   }
 
  /**
@@ -124,6 +126,7 @@ class DrawLattice extends Canvas {
     timerOn = true;
     int count = 0;
     int totalMagnetism = 0;
+    double susceptibility = 0;
 
     while (timerOn) {
       count++;
@@ -146,11 +149,12 @@ class DrawLattice extends Canvas {
         repaint();
       }        
       if (count >= size * size) {
-        totalM_1 = Magnetism.total(box);
+        totalMagnetism = Magnetism.total(box);
       }
+      susceptibility = Magnetism.susceptibility(beta, size ,totalMagnetism, Magnetism.total(box));
     }
     System.out.println("Total Kawazaki Magnetism " + totalMagnetism);
-    System.out.println("Kawazaki Susceptability " + Magnetism.susceptibility(beta, size, totalM_0,totalM_1));       
+    System.out.println("Kawazaki Susceptability " + susceptibility);
   }
 
  /**

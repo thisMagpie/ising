@@ -28,6 +28,6 @@ class Magnetism {
     return M;
   }
   public static double susceptibility(double beta, double size, double Mo, double M) {
-    return (beta/size) * (Math.pow(Mo, 2) - Math.pow(M, 2));
+    return (beta/(size* size)) * (Math.pow(Mo, 2) - Math.pow(M, 2));
   }
 }
