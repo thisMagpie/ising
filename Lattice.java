@@ -21,16 +21,65 @@ class Lattice {
   double beta;
   int[][] box;
 
-  public Lattice(int size, double beta, String dynamics) {
+  public Lattice(int size) {
     this.size = size;
-    this.beta = beta;
-    this.dynamics = dynamics;
-
     box = new int[size][size];
     for (int i = 0; i < size; i++) {
       for (int j = 0; j < size; j++) {
         box[i][j] = 1;
         if (Spin.isFlipped()) box[i][j] = -1;
+      }
+    }
+  }
+
+ /**
+  * plotGlauber:
+  *     Method to call for plotting Glauber dynamics TODO finish
+  *     CTRL+C to exit.
+  */
+  public void plotGlauber(double beta) {
+    int count = 0;
+
+    while (count < (size * size)) {
+      count++;
+      // pick random spin in lattice
+      int m = Spin.pick(size);
+      int n = Spin.pick(size);
+
+      // check if energy meets threshold
+      if (Dynamics.glauber(Dynamics.metropolis(box, m, n), beta)) {
+        box[m][n] = -box[m][n];
+      }
+    }
+  }
+
+ /**
+  * plotKawazaki:
+  *     Method to call for plotting Kawazaki dynamics TODO finish
+  *     CTRL+C to exit.
+  */
+  public void plotKawazaki(double beta) {
+    int count = 0;
+    double susceptibility = 0;
+
+    while (count < (size * size)) {
+      count++;
+      // pick random spin in lattice
+      int m_0 = Spin.pick(size);
+      int n_0 = Spin.pick(size);
+      int m_1 = Spin.pick(size);
+      int n_1 = Spin.pick(size);
+
+      if (Dynamics.nearestNeighbour(box, m_0, n_0, m_1, n_1) &
+          Dynamics.nearestNeighbour(box, m_1, n_1, m_0, n_0)) {
+        double dE_0 = Dynamics.metropolis(box, m_0, n_0);
+        double dE_1 = Dynamics.metropolis(box, m_1, n_1);
+
+        // check if energy meets threshold
+        if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
+          box[m_1][n_1] = -box[m_1][n_1];
+          box[m_0][n_0] = -box[m_0][n_0];
+        }
       }
     }
   }

@@ -140,14 +140,9 @@ class DrawLattice extends Canvas {
           paintPixels(m_0, n_0);
           paintPixels(m_1, n_1);
           repaint();
-        }        
-        if (count >= size * size) {
-          aveM = Magnetism.mean(box);
         }
       }
     }
-
-    System.out.println("Total Kawazaki Magnetism " + aveM);
   }
 
  /**
