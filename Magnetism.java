@@ -17,17 +17,15 @@
 import java.lang.Math.*;
 
 class Magnetism {
+  double mean;
 
-  public static int total(int[][] box) {
+  public static double mean(int[][] box) {
     int M = 0;
     for (int i = 0; i < box.length - 1; i++) {
       for (int j = 0; j < box.length - 1; j++) {
         M += box[i][j];
       }
     }
-    return M;
-  }
-  public static double susceptibility(double beta, double size, double Mo, double M) {
-    return (beta/(size* size)) * (Math.pow(Mo, 2) - Math.pow(M, 2));
+    return M / (box.length - 1);
   }
 }
