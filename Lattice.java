@@ -35,7 +35,6 @@ class Lattice {
  /**
   * plotGlauber:
   *     Method to call for plotting Glauber dynamics TODO finish
-  *     CTRL+C to exit.
   */
   public void plotGlauber(double beta) {
     int count = 0;
@@ -56,7 +55,6 @@ class Lattice {
  /**
   * plotKawazaki:
   *     Method to call for plotting Kawazaki dynamics TODO finish
-  *     CTRL+C to exit.
   */
   public void plotKawazaki(double beta) {
     int count = 0;
