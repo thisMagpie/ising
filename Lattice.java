@@ -33,7 +33,6 @@ class Lattice {
         if (Spin.isFlipped()) box[i][j] = -1;
       }
     }
-    return box;
   }
 }
 
