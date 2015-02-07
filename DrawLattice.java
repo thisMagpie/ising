@@ -136,23 +136,26 @@ class DrawLattice extends Canvas {
       int m_1 = Spin.pick(size);
       int n_1 = Spin.pick(size);
 
+      if (Dynamics.nearestNeighbour(box, m_0, n_0, m_1, n_1) &
+          Dynamics.nearestNeighbour(box, m_1, n_1, m_0, n_0)) {
+        double dE_0 = Dynamics.metropolis(box, m_0, n_0);
+        double dE_1 = Dynamics.metropolis(box, m_1, n_1);
 
-      double dE_0 = Dynamics.metropolis(box, m_0, n_0);
-      double dE_1 = Dynamics.metropolis(box, m_1, n_1);
-
-      // check if energy meets threshold
-      if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
-        box[m_1][n_1] = -box[m_1][n_1];
-        box[m_0][n_0] = -box[m_0][n_0];
-        paintPixels(m_0, n_0);
-        paintPixels(m_1, n_1);
-        repaint();
-      }        
-      if (count >= size * size) {
-        totalMagnetism = Magnetism.total(box);
+        // check if energy meets threshold
+        if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
+          box[m_1][n_1] = -box[m_1][n_1];
+          box[m_0][n_0] = -box[m_0][n_0];
+          paintPixels(m_0, n_0);
+          paintPixels(m_1, n_1);
+          repaint();
+        }        
+        if (count >= size * size) {
+          totalMagnetism = Magnetism.total(box);
+        }
+        susceptibility = Magnetism.susceptibility(beta, size ,totalMagnetism, Magnetism.total(box));
       }
-      susceptibility = Magnetism.susceptibility(beta, size ,totalMagnetism, Magnetism.total(box));
     }
+
     System.out.println("Total Kawazaki Magnetism " + totalMagnetism);
     System.out.println("Kawazaki Susceptability " + susceptibility);
   }
