@@ -50,7 +50,7 @@ class Lattice {
         box[m][n] = -box[m][n];
       }
     }
-    this.mean = Magnetism.mean(box);
+    this.mean = Stats.mean(box);
   }
 
   public double getMean() {
@@ -83,7 +83,7 @@ class Lattice {
         }
       }
     }
-    this.mean = Magnetism.mean(box);
+    this.mean = Stats.mean(box);
   }
 }
 

@@ -16,17 +16,17 @@
 
 import java.lang.Math.*;
 
-class Magnetism {
+class Stats{
   double mean;
 
   public static double mean(int[][] box) {
-    int M = 0;
+    int mean = 0;
     for (int i = 0; i < box.length - 1; i++) {
       for (int j = 0; j < box.length - 1; j++) {
-        M += box[i][j];
+        mean += box[i][j];
       }
     }
-    return M / (box.length - 1);
+    return mean / (box.length - 1);
   }
 
   public static double standardDeviation(double mean, double ave) {

@@ -38,10 +38,11 @@ class Run {
         plot.flipGlauber(size, 1.0 /(k * Tplot));
         magnetism = plot.getMean();
         for (int i = 0; i < 10; i++) {
+          Tplot+= 0.2;
           for (int j = 0; j < 100; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
           }
-          standardDeviation[i] = Magnetism.standardDeviation(magnetism, plot.getMean());
+          standardDeviation[i] = Stats.standardDeviation(magnetism, plot.getMean());
         }
         break;
       case "kawazaki":
@@ -52,7 +53,7 @@ class Run {
           for (int j = 0; j < 100; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
           }
-          standardDeviation[i] = Magnetism.standardDeviation(magnetism, plot.getMean());
+          standardDeviation[i] = Stats.standardDeviation(magnetism, plot.getMean());
         }
         break;
       }
