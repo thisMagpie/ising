@@ -13,6 +13,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>
  *
  */
+import java.io.*;
 
 class Run {
 
@@ -64,6 +65,11 @@ class Run {
         }
         break;
       }
+      try {
+        PrintWriter p = IO.writeTo("susceptability.txt");
+        ArrayIO.writeDoubles(p, t, susceptability);
+      }
+      catch (Exception e) {}
       for (int i=0; i < susceptability.length; i++){
         System.out.println(t[i] + " " + susceptability[i]); //TODO print to plotting file
       }

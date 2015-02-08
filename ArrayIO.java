@@ -59,6 +59,19 @@ public class ArrayIO extends IO {
     * @param toFile     The PrintWriter instance object to write files with.
     * @para,data        The 2D array of doubles to read
     */
+    public static void writeDoubles(PrintWriter toFile, double[] xData, double[] yData){
+        for (int i = 0; i < xData.length; i++) {
+            toFile.write(xData[i] + " " + yData[i]+"\r\n");
+        }
+        toFile.close();
+    }
+
+   /**
+    * writeDoubles
+    *                   Static method to write data from file with
+    * @param toFile     The PrintWriter instance object to write files with.
+    * @para,data        The 2D array of doubles to read
+    */
     public static void writeDoubles(PrintWriter toFile, double[][] data){
         for(int i=0; i<data.length;i++) {
             toFile.printf("%2.5f %2.5f", data[i][0], data[i][1]);
