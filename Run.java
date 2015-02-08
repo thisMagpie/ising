@@ -27,7 +27,9 @@ class Run {
 
       double magnetism = 0.0;
       double chi = 0.0;
-      double[] standardDeviation = new double[10];
+
+      double[] susceptability = new double[10];
+      double[] t = new double[10];
 
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
       Lattice plot = new Lattice(size);
@@ -42,7 +44,9 @@ class Run {
           for (int j = 0; j < 100; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
           }
-          standardDeviation[i] = Stats.standardDeviation(magnetism, plot.getMean());
+          susceptability[i] = 1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(magnetism,
+                                                                                        plot.getMean());
+          t[i] = Tplot;
         }
         break;
       case "kawazaki":
@@ -50,15 +54,18 @@ class Run {
         plot.flipKawazaki(1.0 /(k * Tplot));
         magnetism = plot.getMean();
         for (int i = 0; i < 10; i++) {
+          Tplot+= 0.2;
           for (int j = 0; j < 100; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
           }
-          standardDeviation[i] = Stats.standardDeviation(magnetism, plot.getMean());
+          susceptability[i] = 1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(magnetism,
+                                                                                        plot.getMean());
+          t[i] = Tplot;
         }
         break;
       }
-      for (int i=0; i < standardDeviation.length; i++){
-        System.out.println(standardDeviation[i]);
+      for (int i=0; i < susceptability.length; i++){
+        System.out.println(t[i] + " " + susceptability[i]); //TODO print to plotting file
       }
     }
     else {
