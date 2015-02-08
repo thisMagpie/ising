@@ -71,7 +71,7 @@ class Run {
       }
       catch (Exception e) {}
       for (int i=0; i < susceptability.length; i++){
-        System.out.println(t[i] + " " + susceptability[i]); //TODO print to plotting file
+        System.out.println(t[i] + " " + susceptability[i]);
       }
     }
     else {
