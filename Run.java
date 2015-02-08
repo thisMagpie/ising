@@ -46,9 +46,13 @@ class Run {
         break;
       case "kawazaki":
         draw.runKawazaki();
-        while (Tplot < size * size) {
-          Tplot += 0.2;
-          plot.flipKawazaki(1.0 /(k * Tplot));
+        plot.flipKawazaki(1.0 /(k * Tplot));
+        magnetism = plot.getMean();
+        for (int i = 0; i < 10; i++) {
+          for (int j = 0; j < 100; j++) {
+            plot.flipGlauber(size, 1.0 /(k * Tplot));
+          }
+          standardDeviation[i] = Magnetism.standardDeviation(magnetism, plot.getMean());
         }
         break;
       }
