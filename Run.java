@@ -28,9 +28,12 @@ class Run {
 
       double magnetism = 0.0;
       double chi = 0.0;
+      int noSweeps = 10;
+      double dE;
 
-      double[] susceptability = new double[10];
-      double[] t = new double[10];
+      double[] susceptability = new double[noSweeps];
+      double[] t = new double[noSweeps];
+      double[] heatCapacity = new double[noSweeps];
 
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
       Lattice plot = new Lattice(size);
@@ -40,6 +43,7 @@ class Run {
         draw.runGlauber();
         plot.flipGlauber(size, 1.0 /(k * Tplot));
         magnetism = plot.getMean();
+        dE = plot.getDE();
         for (int i = 0; i < 10; i++) {
           Tplot+= 0.2;
           for (int j = 0; j < 100; j++) {
@@ -47,6 +51,8 @@ class Run {
           }
           susceptability[i] = 1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(magnetism,
                                                                                         plot.getMean());
+          heatCapacity[i] =  1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(dE,
+                                                                                       plot.getDE());
           t[i] = Tplot;
         }
         break;
@@ -54,6 +60,7 @@ class Run {
         draw.runKawazaki();
         plot.flipKawazaki(1.0 /(k * Tplot));
         magnetism = plot.getMean();
+        dE = plot.getDE();
         for (int i = 0; i < 10; i++) {
           Tplot+= 0.2;
           for (int j = 0; j < 100; j++) {
@@ -61,15 +68,20 @@ class Run {
           }
           susceptability[i] = 1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(magnetism,
                                                                                         plot.getMean());
+          heatCapacity[i] =  1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(dE,
+                                                                                       plot.getDE());
           t[i] = Tplot;
         }
         break;
       }
       try {
-        PrintWriter p = IO.writeTo("susceptability.txt");
-        ArrayIO.writeDoubles(p, t, susceptability);
+        PrintWriter susc = IO.writeTo("susceptability.txt");
+        PrintWriter hc = IO.writeTo("heat_capacity.txt");
+        ArrayIO.writeDoubles(susc, t, susceptability);
+        ArrayIO.writeDoubles(hc, t, heatCapacity);
       }
       catch (Exception e) {}
+
       for (int i=0; i < susceptability.length; i++){
         System.out.println(t[i] + " " + susceptability[i]);
       }
