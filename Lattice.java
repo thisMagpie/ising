@@ -18,13 +18,15 @@ class Lattice {
 
   String dynamics;
   int size;
-  double beta, mean;
+  double beta, mean, dE;
   int[][] box;
 
   public Lattice(int size) {
     mean = 0.0;
     this.size = size;
     box = new int[size][size];
+    dE = 0.0;
+
     for (int i = 0; i < size; i++) {
       for (int j = 0; j < size; j++) {
         box[i][j] = 1;
@@ -46,7 +48,8 @@ class Lattice {
     while (count < size * size) {
       count ++;
       // check if energy meets threshold
-      if (Dynamics.glauber(Dynamics.metropolis(box, m, n), beta)) {
+      dE = Dynamics.metropolis(box, m, n);
+      if (Dynamics.glauber(dE, beta)) {
         box[m][n] = -box[m][n];
       }
     }
@@ -55,6 +58,10 @@ class Lattice {
 
   public double getMean() {
     return mean;
+  }
+
+  public double getDE() {
+    return dE;
   }
  /**
   * flipKawazaki:
@@ -75,9 +82,11 @@ class Lattice {
 
         double dE_0 = Dynamics.metropolis(box, m_0, n_0);
         double dE_1 = Dynamics.metropolis(box, m_1, n_1);
+              // check if energy meets threshold
+        dE = dE_0 + dE_1;
 
         // check if energy meets threshold
-        if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
+        if (Dynamics.kawazaki(dE, beta)) {
           box[m_1][n_1] = -box[m_1][n_1];
           box[m_0][n_0] = -box[m_0][n_0];
         }
