@@ -25,17 +25,23 @@ class Run {
       String dynamics = args[2];
       double beta = (1.0 /(k * T));
 
-      double betaPlot = (1.0 /(k * Tplot));
+      double magnetism = 0.0;
+      double chi = 0.0;
+      double[] standardDeviation = new double[10];
 
-      System.out.printf("\nsize = %d T = %g Dynamics = %s\n", size, T, dynamics);
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
       Lattice plot = new Lattice(size);
+
       switch (dynamics) {
       case "glauber":
         draw.runGlauber();
-        while (Tplot < size * size) {
-          Tplot += 0.2;
-          plot.flipGlauber(1.0 /(k * Tplot));
+        plot.flipGlauber(size, 1.0 /(k * Tplot));
+        magnetism = plot.getMean();
+        for (int i = 0; i < 10; i++) {
+          for (int j = 0; j < 100; j++) {
+            plot.flipGlauber(size, 1.0 /(k * Tplot));
+          }
+          standardDeviation[i] = Magnetism.standardDeviation(magnetism, plot.getMean());
         }
         break;
       case "kawazaki":
@@ -45,6 +51,9 @@ class Run {
           plot.flipKawazaki(1.0 /(k * Tplot));
         }
         break;
+      }
+      for (int i=0; i < standardDeviation.length; i++){
+        System.out.println(standardDeviation[i]);
       }
     }
     else {

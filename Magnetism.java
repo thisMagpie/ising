@@ -28,4 +28,8 @@ class Magnetism {
     }
     return M / (box.length - 1);
   }
+
+  public static double standardDeviation(double mean, double ave) {
+    return (mean * mean) - (ave * ave);
+  }
 }

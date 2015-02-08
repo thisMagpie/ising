@@ -18,10 +18,11 @@ class Lattice {
 
   String dynamics;
   int size;
-  double beta;
+  double beta, mean;
   int[][] box;
 
   public Lattice(int size) {
+    mean = 0.0;
     this.size = size;
     box = new int[size][size];
     for (int i = 0; i < size; i++) {
@@ -36,40 +37,53 @@ class Lattice {
   * plotGlauber:
   *     Method to call for plotting Glauber dynamics TODO finish
   */
-  public void flipGlauber(double beta) {
+  public void flipGlauber(int size, double beta) {
+    int count = 0;
     // pick random spin in lattice
     int m = Spin.pick(size);
     int n = Spin.pick(size);
 
-    // check if energy meets threshold
-    if (Dynamics.glauber(Dynamics.metropolis(box, m, n), beta)) {
-      box[m][n] = -box[m][n];
+    while (count < size * size) {
+      count ++;
+      // check if energy meets threshold
+      if (Dynamics.glauber(Dynamics.metropolis(box, m, n), beta)) {
+        box[m][n] = -box[m][n];
+      }
     }
+    this.mean = Magnetism.mean(box);
   }
 
+  public double getMean() {
+    return mean;
+  }
  /**
   * flipKawazaki:
-  *     Method to call for plotting Kawazaki dynamics TODO finish
+  *     Method to call for plotting Kawazaki dynamics
   */
   public void flipKawazaki(double beta) {
+    int count = 0;
     // pick two random spins in lattice
     int m_0 = Spin.pick(size);
     int n_0 = Spin.pick(size);
     int m_1 = Spin.pick(size);
     int n_1 = Spin.pick(size);
 
-    if (Dynamics.nearestNeighbour(box, m_0, n_0, m_1, n_1) &
-        Dynamics.nearestNeighbour(box, m_1, n_1, m_0, n_0)) {
+    while (count < size * size) {
+      count ++;
+      if (Dynamics.nearestNeighbour(box, m_0, n_0, m_1, n_1) &
+          Dynamics.nearestNeighbour(box, m_1, n_1, m_0, n_0)) {
 
-      double dE_0 = Dynamics.metropolis(box, m_0, n_0);
-      double dE_1 = Dynamics.metropolis(box, m_1, n_1);
+        double dE_0 = Dynamics.metropolis(box, m_0, n_0);
+        double dE_1 = Dynamics.metropolis(box, m_1, n_1);
 
-      // check if energy meets threshold
-      if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
-        box[m_1][n_1] = -box[m_1][n_1];
-        box[m_0][n_0] = -box[m_0][n_0];
+        // check if energy meets threshold
+        if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
+          box[m_1][n_1] = -box[m_1][n_1];
+          box[m_0][n_0] = -box[m_0][n_0];
+        }
       }
     }
+    this.mean = Magnetism.mean(box);
   }
 }
 
