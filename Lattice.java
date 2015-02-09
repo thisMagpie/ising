@@ -20,6 +20,7 @@ class Lattice {
   int size;
   double beta, mean, dE;
   int[][] box;
+  int[] mn;
 
   public Lattice(int size) {
     mean = 0.0;
@@ -41,16 +42,19 @@ class Lattice {
   */
   public void flipGlauber(int size, double beta) {
     int count = 0;
+    mn = new int[2];
+ 
     // pick random spin in lattice
-    int m = Spin.pick(size);
-    int n = Spin.pick(size);
+    mn[0] = Spin.pick(size);
+    mn[1] = Spin.pick(size);
 
     while (count < size * size) {
       count ++;
+
       // check if energy meets threshold
-      dE = Dynamics.metropolis(box, m, n);
+      dE = Dynamics.metropolis(box, mn[0], mn[1]);
       if (Dynamics.glauber(dE, beta)) {
-        box[m][n] = -box[m][n];
+        box[mn[0]][mn[1]] = -box[mn[0]][mn[1]];
       }
     }
     this.mean = Stats.mean(box);
@@ -63,6 +67,11 @@ class Lattice {
   public double getDE() {
     return dE;
   }
+
+  public int[] getSelectedSpin() {
+    return mn;
+  }
+
  /**
   * flipKawazaki:
   *     Method to call for plotting Kawazaki dynamics

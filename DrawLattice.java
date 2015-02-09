@@ -90,20 +90,14 @@ class DrawLattice extends Canvas {
   */
   public void runGlauber() {
     timerOn = true;
-    int count = 0;
-    int totalMagnetism = 0;
-    double susceptibility = 0;
 
     while (timerOn) {
-      count++;
-      // pick random spin in lattice
-      int m = Spin.pick(size);
-      int n = Spin.pick(size);
-
+      Lattice lattice = new Lattice(size); 
+      int[] spins = Spin.picks(size, 2);
       // check if energy meets threshold
-      if (Dynamics.glauber(Dynamics.metropolis(box, m, n), beta)) {
-        box[m][n] = -box[m][n];
-        paintPixels(m, n);
+      if (Dynamics.glauber(Dynamics.metropolis(box, spins[0], spins[1]), beta)) {
+        box[spins[0]][spins[1]] = -box[spins[0]][spins[1]];
+        paintPixels(spins[0], spins[1]);
         repaint();
       }
     }
@@ -123,22 +117,20 @@ class DrawLattice extends Canvas {
     while (timerOn) {
       count++;
       // pick random spin in lattice
-      int m_0 = Spin.pick(size);
-      int n_0 = Spin.pick(size);
-      int m_1 = Spin.pick(size);
-      int n_1 = Spin.pick(size);
+      int[] spins = Spin.picks(size, 4);
 
-      if (Dynamics.nearestNeighbour(box, m_0, n_0, m_1, n_1) &
-          Dynamics.nearestNeighbour(box, m_1, n_1, m_0, n_0)) {
-        double dE_0 = Dynamics.metropolis(box, m_0, n_0);
-        double dE_1 = Dynamics.metropolis(box, m_1, n_1);
+
+      if (Dynamics.nearestNeighbour(box, spins[0], spins[1], spins[2], spins[3]) &
+          Dynamics.nearestNeighbour(box, spins[2], spins[3], spins[0], spins[1])) {
+        double dE_0 = Dynamics.metropolis(box, spins[0], spins[1]);
+        double dE_1 = Dynamics.metropolis(box, spins[2], spins[3]);
 
         // check if energy meets threshold
         if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
-          box[m_1][n_1] = -box[m_1][n_1];
-          box[m_0][n_0] = -box[m_0][n_0];
-          paintPixels(m_0, n_0);
-          paintPixels(m_1, n_1);
+          box[spins[2]][spins[3]] = -box[spins[2]][spins[3]];
+          box[spins[0]][spins[1]] = -box[spins[0]][spins[1]];
+          paintPixels(spins[0], spins[1]);
+          paintPixels(spins[2], spins[3]);
           repaint();
         }
       }

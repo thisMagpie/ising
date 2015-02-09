@@ -39,5 +39,19 @@ class Spin {
   public static int pick (int size) {
     return (int) (Math.random() * size); 
   }
+
+ /**
+  * picks
+  *
+  * @size    The size of the Lattice
+  * @length  The desired length for the array
+  * @return  The coordinates of the picked spin
+  */
+  public static int[] picks(int size, int length) {
+    int[] array = new int[length];
+    for (int i = 0; i < length; i++)
+      array[i] = (int) (Math.random() * size); 
+    return array;
+  }
 }
 
