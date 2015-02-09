@@ -67,7 +67,7 @@ class Lattice {
   * flipKawazaki:
   *     Method to call for plotting Kawazaki dynamics
   */
-  public void flipKawazaki(double beta) {
+  public void flipKawazaki(int size, double beta) {
     int count = 0;
     // pick two random spins in lattice
     int m_0 = Spin.pick(size);

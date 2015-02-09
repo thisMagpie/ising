@@ -29,6 +29,7 @@ class Run {
       double magnetism = 0.0;
       double chi = 0.0;
       int noSweeps = 10;
+      int noMeasurements = 100;
       double dE;
       double alpha = 1.0 /(k * size * size );
 
@@ -45,9 +46,9 @@ class Run {
         plot.flipGlauber(size, 1.0 /(k * Tplot));
         magnetism = plot.getMean();
         dE = plot.getDE();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < noSweeps; i++) {
           Tplot+= 0.2;
-          for (int j = 0; j < 100; j++) {
+          for (int j = 0; j < noMeasurements; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
           }
           susceptability[i] = Tplot * alpha * Stats.standardDeviation(magnetism, plot.getMean());
@@ -57,13 +58,13 @@ class Run {
         break;
       case "kawazaki":
         draw.runKawazaki();
-        plot.flipKawazaki(1.0 /(k * Tplot));
+        plot.flipKawazaki(size, 1.0 /(k * Tplot));
         magnetism = plot.getMean();
         dE = plot.getDE();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < noSweeps; i++) {
           Tplot+= 0.2;
-          for (int j = 0; j < 100; j++) {
-            plot.flipGlauber(size, 1.0 /(k * Tplot));
+          for (int j = 0; j < noMeasurements; j++) {
+            plot.flipKawazaki(size, 1.0 /(k * Tplot));
           }
           susceptability[i] = Tplot * alpha * Stats.standardDeviation(magnetism, plot.getMean());
           heatCapacity[i] = Tplot * alpha * Stats.standardDeviation(dE, plot.getDE());
