@@ -18,7 +18,7 @@ class Lattice {
 
   String dynamics;
   int size;
-  double beta, mean, dE;
+  double beta, mean, sum, dE;
   int[][] box;
   int[] mn;
 
@@ -57,11 +57,16 @@ class Lattice {
         box[mn[0]][mn[1]] = -box[mn[0]][mn[1]];
       }
     }
-    this.mean = Stats.mean(box);
+    mean = Stats.mean(box);
+    sum = Stats.sum(box);
   }
 
   public double getMean() {
     return mean;
+  }
+
+  public double getSum() {
+    return sum;
   }
 
   public double getDE() {

@@ -30,12 +30,13 @@ class Run {
       double chi = 0.0;
       int noSweeps = 10;
       int noMeasurements = 100;
-      double dE;
+      double dE = 0.0;
       double alpha = 1.0 /(k * size * size );
 
-      double[] susceptability = new double[noSweeps];
+      double[] susceptability = new double[noMeasurements];
       double[] t = new double[noSweeps];
-      double[] heatCapacity = new double[noSweeps];
+      double[] heatCapacity = new double[noMeasurements];
+      int noEquilibration = 100;
 
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
       Lattice plot = new Lattice(size);
@@ -44,45 +45,51 @@ class Run {
       case "glauber":
         draw.runGlauber();
         plot.flipGlauber(size, 1.0 /(k * Tplot));
-        magnetism = plot.getMean();
         dE = plot.getDE();
         for (int i = 0; i < noSweeps; i++) {
           Tplot+= 0.2;
           for (int j = 0; j < noMeasurements; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
           }
-          susceptability[i] = Tplot * alpha * Stats.standardDeviation(magnetism, plot.getMean());
-          heatCapacity[i] = Tplot * alpha * Stats.standardDeviation(dE, plot.getDE());
+          susceptability[i] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism, plot.getMean());
+          heatCapacity[i] = (alpha / Tplot * Tplot ) * Stats.standardDeviation(dE, plot.getDE());
           t[i] = Tplot;
         }
         break;
       case "kawazaki":
         draw.runKawazaki();
         plot.flipKawazaki(size, 1.0 /(k * Tplot));
-        magnetism = plot.getMean();
-        dE = plot.getDE();
         for (int i = 0; i < noSweeps; i++) {
-          Tplot+= 0.2;
-          for (int j = 0; j < noMeasurements; j++) {
+          Tplot-= 0.1;
+          for (int j = 0; j < noEquilibration; j++) {
             plot.flipKawazaki(size, 1.0 /(k * Tplot));
+            magnetism = plot.getSum();
+            dE = plot.getDE();
+          }   
+          t[i] = Tplot;      
+          int nMeasurement = 0;
+          for (int j = 1; j <= noMeasurements + 1; j++) {
+            plot.flipKawazaki(size, 1.0 /(k * Tplot));
+            if(j%10==0) {
+               nMeasurement ++;
+               System.out.println(nMeasurement);
+               susceptability[nMeasurement]= Tplot * alpha * Stats.standardDeviation(magnetism, plot.getSum());
+               heatCapacity[nMeasurement] = (alpha / Tplot * Tplot ) * Stats.standardDeviation(dE, plot.getDE());
+            }
           }
-          susceptability[i] = Tplot * alpha * Stats.standardDeviation(magnetism, plot.getMean());
-          heatCapacity[i] = Tplot * alpha * Stats.standardDeviation(dE, plot.getDE());
-          t[i] = Tplot;
         }
         break;
       }
       try {
+        System.out.println("\nWriting "+ dynamics + " to file... ");
         PrintWriter susc = IO.writeTo("susceptability.txt");
         PrintWriter hc = IO.writeTo("heat_capacity.txt");
         ArrayIO.writeDoubles(susc, t, susceptability);
         ArrayIO.writeDoubles(hc, t, heatCapacity);
+        System.out.println("\nFile written. ");
+
       }
       catch (Exception e) {}
-
-      for (int i=0; i < susceptability.length; i++){
-        System.out.println(t[i] + " " + susceptability[i]);
-      }
     }
     else {
       System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");
