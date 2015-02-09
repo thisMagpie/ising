@@ -43,10 +43,9 @@ class Lattice {
   public void flipGlauber(int size, double beta) {
     int count = 0;
     mn = new int[2];
- 
+
     // pick random spin in lattice
-    mn[0] = Spin.pick(size);
-    mn[1] = Spin.pick(size);
+    mn = Spin.picks(size, 2);
 
     while (count < size * size) {
       count ++;
@@ -83,26 +82,23 @@ class Lattice {
   */
   public void flipKawazaki(int size, double beta) {
     int count = 0;
+    mn = new int[4];
     // pick two random spins in lattice
-    int m_0 = Spin.pick(size);
-    int n_0 = Spin.pick(size);
-    int m_1 = Spin.pick(size);
-    int n_1 = Spin.pick(size);
-
+    mn = Spin.picks(size, mn.length);
     while (count < size * size) {
       count ++;
-      if (Dynamics.nearestNeighbour(box, m_0, n_0, m_1, n_1) &
-          Dynamics.nearestNeighbour(box, m_1, n_1, m_0, n_0)) {
+      if (Dynamics.nearestNeighbour(box, mn[0], mn[1], mn[2], mn[3]) &
+          Dynamics.nearestNeighbour(box, mn[2], mn[3], mn[0], mn[1])) {
 
-        double dE_0 = Dynamics.metropolis(box, m_0, n_0);
-        double dE_1 = Dynamics.metropolis(box, m_1, n_1);
+        double dE_0 = Dynamics.metropolis(box, mn[0], mn[1]);
+        double dE_1 = Dynamics.metropolis(box, mn[2], mn[3]);
               // check if energy meets threshold
         dE = dE_0 + dE_1;
 
         // check if energy meets threshold
         if (Dynamics.kawazaki(dE, beta)) {
-          box[m_1][n_1] = -box[m_1][n_1];
-          box[m_0][n_0] = -box[m_0][n_0];
+          box[mn[2]][mn[3]] = -box[mn[2]][mn[3]];
+          box[mn[0]][mn[1]] = -box[mn[0]][mn[1]];
         }
       }
     }
