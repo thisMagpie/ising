@@ -30,6 +30,7 @@ class Run {
       double chi = 0.0;
       int noSweeps = 10;
       double dE;
+      double alpha = 1.0 /(k * size * size );
 
       double[] susceptability = new double[noSweeps];
       double[] t = new double[noSweeps];
@@ -49,10 +50,8 @@ class Run {
           for (int j = 0; j < 100; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
           }
-          susceptability[i] = 1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(magnetism,
-                                                                                        plot.getMean());
-          heatCapacity[i] =  1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(dE,
-                                                                                       plot.getDE());
+          susceptability[i] = Tplot * alpha * Stats.standardDeviation(magnetism, plot.getMean());
+          heatCapacity[i] = Tplot * alpha * Stats.standardDeviation(dE, plot.getDE());
           t[i] = Tplot;
         }
         break;
@@ -66,10 +65,8 @@ class Run {
           for (int j = 0; j < 100; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
           }
-          susceptability[i] = 1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(magnetism,
-                                                                                        plot.getMean());
-          heatCapacity[i] =  1.0 /(k * Tplot * size * size ) * Stats.standardDeviation(dE,
-                                                                                       plot.getDE());
+          susceptability[i] = Tplot * alpha * Stats.standardDeviation(magnetism, plot.getMean());
+          heatCapacity[i] = Tplot * alpha * Stats.standardDeviation(dE, plot.getDE());
           t[i] = Tplot;
         }
         break;
