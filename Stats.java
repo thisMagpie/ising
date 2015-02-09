@@ -29,6 +29,16 @@ class Stats{
     return mean / (box.length - 1);
   }
 
+  public static double sum(int[][] box) {
+    int sum = 0;
+    for (int i = 0; i < box.length - 1; i++) {
+      for (int j = 0; j < box.length - 1; j++) {
+        sum += box[i][j];
+      }
+    }
+    return sum;
+  }
+
   public static double standardDeviation(double mean, double ave) {
     return (mean * mean) - (ave * ave);
   }
