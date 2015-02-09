@@ -22,13 +22,13 @@ class Run {
     if(args.length == 3) {
       int size = Integer.parseInt(args[0]);
       double T = Double.parseDouble(args[1]);
-      double Tplot = 0.0001;
+      double Tplot = 10.0;
       String dynamics = args[2];
       double beta = (1.0 /(k * T));
 
       double magnetism = 0.0;
       double chi = 0.0;
-      int noSweeps = 10;
+      int noSweeps = 100;
       int noMeasurements = 100;
       double dE = 0.0;
       double alpha = 1.0 /(k * size * size );
@@ -45,14 +45,17 @@ class Run {
       case "glauber":
         draw.runGlauber();
         plot.flipGlauber(size, 1.0 /(k * Tplot));
-        dE = plot.getDE();
         for (int i = 0; i < noSweeps; i++) {
-          Tplot+= 0.2;
+          Tplot-= 0.1;
           for (int j = 0; j < noMeasurements; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
+            magnetism = plot.getSum();
+            dE = plot.getDE();
           }
-          susceptability[i] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism, plot.getMean());
-          heatCapacity[i] = (alpha / Tplot * Tplot ) * Stats.standardDeviation(dE, plot.getDE());
+          susceptability[i] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism,
+                                                                          plot.getSum());
+          heatCapacity[i] = (alpha / Tplot * Tplot ) * Stats.standardDeviation(dE,
+                                                                               plot.getDE());
           t[i] = Tplot;
         }
         break;
@@ -66,15 +69,17 @@ class Run {
             magnetism = plot.getSum();
             dE = plot.getDE();
           }   
-          t[i] = Tplot;      
+          t[i] = Tplot;
           int nMeasurement = 0;
           for (int j = 1; j <= noMeasurements + 1; j++) {
             plot.flipKawazaki(size, 1.0 /(k * Tplot));
             if(j%10==0) {
                nMeasurement ++;
                System.out.println(nMeasurement);
-               susceptability[nMeasurement]= Tplot * alpha * Stats.standardDeviation(magnetism, plot.getSum());
-               heatCapacity[nMeasurement] = (alpha / Tplot * Tplot ) * Stats.standardDeviation(dE, plot.getDE());
+               susceptability[nMeasurement]= Tplot * alpha * Stats.standardDeviation(magnetism,
+                                                                                     plot.getSum());
+               heatCapacity[nMeasurement] = (alpha / Tplot * Tplot ) * Stats.standardDeviation(dE,
+                                                                                               plot.getDE());
             }
           }
         }
