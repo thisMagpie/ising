@@ -44,57 +44,51 @@ class Run {
       Lattice plot = new Lattice(size);
 
       switch (dynamics) {
-      case "glauber":
-        draw.runGlauber();
-        plot.flipGlauber(size, 1.0 /(k * Tplot));
-        for (int i = 0; i < noSweeps; i++) {
-          Tplot-= 0.1;
-          for (int j = 0; j < noEquilibration; j++) {
-            plot.flipGlauber(size, 1.0 /(k * Tplot));
-            magnetism = plot.getSum();
-            dE = plot.getDE();
-          }
-          t[i] = Tplot;
-          int nMeasurement = 0;
-          for (int j = 1; j <= noMeasurements + 1; j++) {
-            plot.flipGlauber(size, 1.0 /(k * Tplot));
-            if(j%10==0) {
-              nMeasurement ++;
-              error[nMeasurement] = magnetism;
-              susceptability[i] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism,
-                                                                              plot.getSum());
-              heatCapacity[i] = (alpha / (Tplot * Tplot)) * Stats.standardDeviation(dE,
-                                                                                    plot.getDE());
-            }
-          }
-        }
-        break;
-      case "kawazaki":
-        draw.runKawazaki();
-        plot.flipKawazaki(size, 1.0 /(k * Tplot));
-        for (int i = 0; i < noSweeps; i++) {
-          Tplot-= 0.1;
-          for (int j = 0; j < noEquilibration; j++) {
-            plot.flipKawazaki(size, 1.0 /(k * Tplot));
-            magnetism = plot.getSum();
-            dE = plot.getDE();
-          }
-          t[i] = Tplot;
-          int nMeasurement = 0;
-          for (int j = 1; j <= noMeasurements + 1; j++) {
-            plot.flipKawazaki(size, 1.0 /(k * Tplot));
-            if(j%10==0) {
-               nMeasurement ++;
-               error[nMeasurement] = magnetism;
-               susceptability[nMeasurement]= (alpha / Tplot) * Stats.standardDeviation(magnetism,
-                                                                                     plot.getSum());
-               heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * Stats.standardDeviation(dE,
-                                                                                               plot.getDE());
-            }
-          }
-        }
-        break;
+        case "glauber":
+          draw.runGlauber();
+          plot.flipGlauber(size, 1.0 /(k * Tplot));
+          break;
+        case "kawazaki":
+          draw.runKawazaki();
+          plot.flipKawazaki(size, 1.0 /(k * Tplot));
+          break;
       }
+
+      for (int i = 0; i < noSweeps; i++) {
+        Tplot-= 0.1;
+        for (int j = 0; j < noEquilibration; j++) {
+          switch (dynamics) {
+            case "glauber":
+              plot.flipGlauber(size, 1.0 /(k * Tplot));
+              break;
+            case "kawazaki":
+              plot.flipKawazaki(size, 1.0 /(k * Tplot));
+              break;
+          }
+          magnetism = plot.getSum();
+          dE = plot.getDE();
+          }
+          t[i] = Tplot;
+      }
+      int nMeasurement = 0;
+      for (int j = 1; j <= noMeasurements + 1; j++) {
+        switch (dynamics) {
+          case "glauber":
+            plot.flipGlauber(size, 1.0 /(k * Tplot));
+            break;
+          case "kawazaki":
+            plot.flipKawazaki(size, 1.0 /(k * Tplot));
+            break;
+        }
+        if(j%10==0) {
+          nMeasurement ++;
+          error[nMeasurement] = magnetism;
+          susceptability[nMeasurement] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism,
+                                                                          plot.getSum());
+          heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * Stats.standardDeviation(dE,
+                                                                                plot.getDE());
+          }
+        }
       try {
         System.out.println("\nWriting "+ dynamics + " to file... ");
         PrintWriter susc = IO.writeTo("susceptability.txt");
@@ -102,6 +96,7 @@ class Run {
         ArrayIO.writeDoubles(susc, t, susceptability);
         ArrayIO.writeDoubles(hc, t, heatCapacity);
         System.out.println("\nFile written. ");
+        System.exit(0);
 
       }
       catch (Exception e) {}
