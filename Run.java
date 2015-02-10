@@ -43,28 +43,22 @@ class Run {
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
       Lattice plot = new Lattice(size);
 
+      // Run graphics
       switch (dynamics) {
         case "glauber":
           draw.runGlauber();
-          plot.flipGlauber(size, 1.0 /(k * Tplot));
           break;
         case "kawazaki":
           draw.runKawazaki();
-          plot.flipKawazaki(size, 1.0 /(k * Tplot));
           break;
       }
 
+      // Plotting stuff
+      flipDynamics(plot, dynamics, Tplot, size, k);
       for (int i = 0; i < noSweeps; i++) {
         Tplot-= 0.1;
         for (int j = 0; j < noEquilibration; j++) {
-          switch (dynamics) {
-            case "glauber":
-              plot.flipGlauber(size, 1.0 /(k * Tplot));
-              break;
-            case "kawazaki":
-              plot.flipKawazaki(size, 1.0 /(k * Tplot));
-              break;
-          }
+          flipDynamics(plot, dynamics, Tplot, size, k);
           magnetism = plot.getSum();
           dE = plot.getDE();
           }
@@ -72,14 +66,8 @@ class Run {
       }
       int nMeasurement = 0;
       for (int j = 1; j <= noMeasurements + 1; j++) {
-        switch (dynamics) {
-          case "glauber":
-            plot.flipGlauber(size, 1.0 /(k * Tplot));
-            break;
-          case "kawazaki":
-            plot.flipKawazaki(size, 1.0 /(k * Tplot));
-            break;
-        }
+        flipDynamics(plot, dynamics, Tplot, size, k);
+
         if(j%10==0) {
           nMeasurement ++;
           error[nMeasurement] = magnetism;
@@ -96,7 +84,6 @@ class Run {
         ArrayIO.writeDoubles(susc, t, susceptability);
         ArrayIO.writeDoubles(hc, t, heatCapacity);
         System.out.println("\nFile written. ");
-        System.exit(0);
 
       }
       catch (Exception e) {}
@@ -105,6 +92,20 @@ class Run {
       System.out.println("\n *** Warning *** Wrong number of Arguments\n\nUsage:\n");
       System.out.println("java Run $size $temperature $dynamics\n");
     }
+  }
+  public static void flipDynamics(Lattice plot,
+                                  String dynamics,
+                                  double T,
+                                  int size,
+                                  double k) {
+    switch (dynamics) {
+      case "glauber":
+        plot.flipGlauber(size, 1.0 /(k * T));
+        break;
+      case "kawazaki":
+        plot.flipKawazaki(size, 1.0 /(k * T));
+        break;
+     }
   }
 }
 
