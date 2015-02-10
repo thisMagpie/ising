@@ -36,6 +36,8 @@ class Run {
       double[] susceptability = new double[noMeasurements];
       double[] t = new double[noSweeps];
       double[] heatCapacity = new double[noMeasurements];
+      double[] error = new double[noMeasurements];
+
       int noEquilibration = 100;
 
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
@@ -47,16 +49,24 @@ class Run {
         plot.flipGlauber(size, 1.0 /(k * Tplot));
         for (int i = 0; i < noSweeps; i++) {
           Tplot-= 0.1;
-          for (int j = 0; j < noMeasurements; j++) {
+          for (int j = 0; j < noEquilibration; j++) {
             plot.flipGlauber(size, 1.0 /(k * Tplot));
             magnetism = plot.getSum();
             dE = plot.getDE();
           }
-          susceptability[i] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism,
-                                                                          plot.getSum());
-          heatCapacity[i] = (alpha / Tplot * Tplot ) * Stats.standardDeviation(dE,
-                                                                               plot.getDE());
           t[i] = Tplot;
+          int nMeasurement = 0;
+          for (int j = 1; j <= noMeasurements + 1; j++) {
+            plot.flipGlauber(size, 1.0 /(k * Tplot));
+            if(j%10==0) {
+              nMeasurement ++;
+              error[nMeasurement] = magnetism;
+              susceptability[i] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism,
+                                                                              plot.getSum());
+              heatCapacity[i] = (alpha / (Tplot * Tplot)) * Stats.standardDeviation(dE,
+                                                                                    plot.getDE());
+            }
+          }
         }
         break;
       case "kawazaki":
@@ -68,17 +78,17 @@ class Run {
             plot.flipKawazaki(size, 1.0 /(k * Tplot));
             magnetism = plot.getSum();
             dE = plot.getDE();
-          }   
+          }
           t[i] = Tplot;
           int nMeasurement = 0;
           for (int j = 1; j <= noMeasurements + 1; j++) {
             plot.flipKawazaki(size, 1.0 /(k * Tplot));
             if(j%10==0) {
                nMeasurement ++;
-               System.out.println(nMeasurement);
-               susceptability[nMeasurement]= Tplot * alpha * Stats.standardDeviation(magnetism,
+               error[nMeasurement] = magnetism;
+               susceptability[nMeasurement]= (alpha / Tplot) * Stats.standardDeviation(magnetism,
                                                                                      plot.getSum());
-               heatCapacity[nMeasurement] = (alpha / Tplot * Tplot ) * Stats.standardDeviation(dE,
+               heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * Stats.standardDeviation(dE,
                                                                                                plot.getDE());
             }
           }
