@@ -36,14 +36,15 @@ class Run {
       double[] susceptability = new double[noMeasurements];
       double[] t = new double[noSweeps];
       double[] heatCapacity = new double[noMeasurements];
-      double[] error = new double[noMeasurements];
+      double[] errorM = new double[noMeasurements];
+      double[] errorE = new double[noMeasurements];
 
       int noEquilibration = 100;
 
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
       Lattice plot = new Lattice(size);
 
-      // Run graphics
+      // Run graphics TODO only run on request
       switch (dynamics) {
         case "glauber":
           draw.runGlauber();
@@ -67,10 +68,10 @@ class Run {
       int nMeasurement = 0;
       for (int j = 1; j <= noMeasurements + 1; j++) {
         flipDynamics(plot, dynamics, Tplot, size, k);
-
         if(j%10==0) {
           nMeasurement ++;
-          error[nMeasurement] = magnetism;
+          errorM[nMeasurement] = magnetism - plot.getSum();
+          errorE[nMeasurement] = dE - plot.getDE();
           susceptability[nMeasurement] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism,
                                                                           plot.getSum());
           heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * Stats.standardDeviation(dE,
@@ -81,8 +82,8 @@ class Run {
         System.out.println("\nWriting "+ dynamics + " to file... ");
         PrintWriter susc = IO.writeTo("susceptability.txt");
         PrintWriter hc = IO.writeTo("heat_capacity.txt");
-        ArrayIO.writeDoubles(susc, t, susceptability);
-        ArrayIO.writeDoubles(hc, t, heatCapacity);
+        ArrayIO.writeDoubles(susc, t, susceptability, errorM);
+        ArrayIO.writeDoubles(hc, t, heatCapacity, errorE);
         System.out.println("\nFile written. ");
         System.exit(0);
       }
