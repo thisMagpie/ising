@@ -71,7 +71,7 @@ class Run {
         if(j%10==0) {
           nMeasurement ++;
           errorM[nMeasurement] = magnetism - plot.getSum();
-          errorE[nMeasurement] = dE - plot.getDE();
+          errorE[nMeasurement] = dE;
           susceptability[nMeasurement] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism,
                                                                           plot.getSum());
           heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * Stats.standardDeviation(dE,
@@ -79,13 +79,10 @@ class Run {
           }
         }
       try {
-        System.out.println("\nWriting "+ dynamics + " to file... ");
-        PrintWriter susc = IO.writeTo("susceptability.txt");
-        PrintWriter hc = IO.writeTo("heat_capacity.txt");
-        ArrayIO.writeDoubles(susc, t, susceptability, errorM);
-        ArrayIO.writeDoubles(hc, t, heatCapacity, errorE);
-        System.out.println("\nFile written. ");
-        System.exit(0);
+         System.out.println("\nWriting "+ dynamics + " to file... ");
+         PrintWriter susc = IO.writeTo("susceptability.txt");
+         PrintWriter hc = IO.writeTo("heat_capacity.txt");
+         writePlots(susc, hc, susceptability, heatCapacity, t, errorE, errorM);
       }
       catch (Exception e) {}
     }
@@ -94,6 +91,8 @@ class Run {
       System.out.println("java Run $size $temperature $dynamics\n");
     }
   }
+
+  // Throwaway method just to do this specific job.
   public static void flipDynamics(Lattice plot,
                                   String dynamics,
                                   double T,
@@ -107,6 +106,21 @@ class Run {
         plot.flipKawazaki(size, 1.0 /(k * T));
         break;
      }
+  }
+
+  // Throwaway method just to do this specific job.
+  public static void writePlots(PrintWriter susc,
+                                PrintWriter hc,
+                                double[] susceptability,
+                                double[] heatCapacity,
+                                double[] t,
+                                double[] errorM,
+                                double[] errorE) {
+
+    ArrayIO.writeDoubles(susc, t, susceptability, errorM);
+    ArrayIO.writeDoubles(hc, t, heatCapacity, errorE);
+    System.out.println("\nFile written. ");
+    System.exit(0);
   }
 }
 
