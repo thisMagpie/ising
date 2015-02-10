@@ -84,7 +84,7 @@ class Run {
         ArrayIO.writeDoubles(susc, t, susceptability);
         ArrayIO.writeDoubles(hc, t, heatCapacity);
         System.out.println("\nFile written. ");
-
+        System.exit(0);
       }
       catch (Exception e) {}
     }
