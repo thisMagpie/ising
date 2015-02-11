@@ -40,6 +40,6 @@ class Stats{
   }
 
   public static double standardDeviation(double mean, double ave) {
-    return (mean * mean) - (ave * ave);
+    return Math.abs((mean * mean) - (ave * ave));
   }
 }

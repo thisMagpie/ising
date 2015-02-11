@@ -25,13 +25,13 @@ class Run {
       double Tplot = 10.0;
       String dynamics = args[2];
       double beta = (1.0 /(k * T));
+      double alpha = 1.0 /(k * size * size );
 
       double magnetism = 0.0;
       double chi = 0.0;
       int noSweeps = 100;
-      int noMeasurements = 100;
+      int noMeasurements = 1000;
       double dE = 0.0;
-      double alpha = 1.0 /(k * size * size );
 
       double[] susceptability = new double[noMeasurements];
       double[] t = new double[noSweeps];
@@ -57,25 +57,25 @@ class Run {
       // Plotting stuff
       flipDynamics(plot, dynamics, Tplot, size, k);
       for (int i = 0; i < noSweeps; i++) {
+        flipDynamics(plot, dynamics, Tplot, size, k);
         Tplot-= 0.1;
         for (int j = 0; j < noEquilibration; j++) {
           flipDynamics(plot, dynamics, Tplot, size, k);
-          magnetism = plot.getSum();
-          dE = plot.getDE();
-          }
-          t[i] = Tplot;
-      }
-      int nMeasurement = 0;
-      for (int j = 1; j <= noMeasurements + 1; j++) {
-        flipDynamics(plot, dynamics, Tplot, size, k);
-        if(j%10==0) {
-          nMeasurement ++;
-          errorM[nMeasurement] = magnetism - plot.getSum();
-          errorE[nMeasurement] = dE;
-          susceptability[nMeasurement] =  (alpha / Tplot ) * Stats.standardDeviation(magnetism,
-                                                                          plot.getSum());
-          heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * Stats.standardDeviation(dE,
-                                                                                plot.getDE());
+        }
+        t[i] = Tplot;
+        int nMeasurement = 0;
+        for (int j = 1; j <= noMeasurements + 1; j++) {
+          flipDynamics(plot, dynamics, Tplot, size, k);
+          magnetism = plot.getSum()/size;
+          dE = Math.abs((size * plot.getDE())/4.0);
+          if(j%10==0) {
+            flipDynamics(plot, dynamics, Tplot, size, k);
+            nMeasurement ++;
+            errorM[nMeasurement] = Stats.standardDeviation(magnetism, plot.getSum());
+            susceptability[nMeasurement] =  (alpha / Tplot ) * errorM[nMeasurement];
+            heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * dE;
+            errorE[nMeasurement] = dE;
+            }
           }
         }
       try {
