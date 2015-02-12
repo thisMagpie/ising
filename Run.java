@@ -27,7 +27,8 @@ class Run {
       double beta = (1.0 /(k * T));
       double alpha = 1.0 /(k * size * size );
 
-      double magnetism = 0.0;
+      double M1 = 0.0;
+      double M2 = 0.0;
       double chi = 0.0;
       int noSweeps = 100;
       int noMeasurements = 1000;
@@ -57,32 +58,36 @@ class Run {
       // Plotting stuff
       flipDynamics(plot, dynamics, Tplot, size, k);
       for (int i = 0; i < noSweeps; i++) {
-        flipDynamics(plot, dynamics, Tplot, size, k);
         Tplot-= 0.1;
+        t[i] = Tplot;
+        int nMeasurement = 0;
         for (int j = 0; j < noEquilibration; j++) {
           flipDynamics(plot, dynamics, Tplot, size, k);
         }
-        t[i] = Tplot;
-        int nMeasurement = 0;
-        for (int j = 1; j <= noMeasurements + 1; j++) {
-          flipDynamics(plot, dynamics, Tplot, size, k);
-          magnetism = plot.getSum()/size;
-          dE = Math.abs((size * plot.getDE())/4.0);
-          if(j%10==0) {
-            flipDynamics(plot, dynamics, Tplot, size, k);
-            nMeasurement ++;
-            errorM[nMeasurement] = Stats.standardDeviation(magnetism, plot.getSum());
-            susceptability[nMeasurement] =  (alpha / Tplot ) * errorM[nMeasurement];
-            heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * dE;
-            errorE[nMeasurement] = dE;
-            }
-          }
+      }
+      int nMeasurement = 0;
+      for (int j = 1; j <= noMeasurements + 1; j++) {
+        flipDynamics(plot, dynamics, Tplot, size, k);
+        if(j%10==0) {
+          M1 = plot.getSum() / (size * size);
+          M2 = (plot.getSum() * plot.getSum())/ (size * size);
+          dE = Math.abs(plot.getAveE());
+          nMeasurement ++;
+          errorM[nMeasurement] = Math.abs(M2 - (M1 * M1));
+          susceptability[nMeasurement] =  (alpha / Tplot ) * errorM[nMeasurement];
+          errorM[nMeasurement] = Math.sqrt(errorM[nMeasurement]);
+          heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * dE;
+          errorE[nMeasurement] = dE;
         }
+      }
       try {
          System.out.println("\nWriting "+ dynamics + " to file... ");
-         PrintWriter susc = IO.writeTo("susceptability.txt");
-         PrintWriter hc = IO.writeTo("heat_capacity.txt");
-         writePlots(susc, hc, susceptability, heatCapacity, t, errorE, errorM);
+         PrintWriter susc = IO.writeTo("susceptability.dat");
+         PrintWriter hc = IO.writeTo("heat_capacity.dat");
+         ArrayIO.writeDoubles(susc, t, susceptability, errorM);
+         ArrayIO.writeDoubles(hc, t, heatCapacity, errorE);
+         System.out.println("\nFile written. ");
+         System.exit(0);
       }
       catch (Exception e) {}
     }
@@ -106,21 +111,6 @@ class Run {
         plot.flipKawazaki(size, 1.0 /(k * T));
         break;
      }
-  }
-
-  // Throwaway method just to do this specific job.
-  public static void writePlots(PrintWriter susc,
-                                PrintWriter hc,
-                                double[] susceptability,
-                                double[] heatCapacity,
-                                double[] t,
-                                double[] errorM,
-                                double[] errorE) {
-
-    ArrayIO.writeDoubles(susc, t, susceptability, errorM);
-    ArrayIO.writeDoubles(hc, t, heatCapacity, errorE);
-    System.out.println("\nFile written. ");
-    System.exit(0);
   }
 }
 

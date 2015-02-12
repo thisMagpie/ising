@@ -19,12 +19,14 @@ class Lattice {
   String dynamics;
   int size;
   double beta, mean, sum, dE;
+  double[] totalE;
   int[][] box;
   int[] mn;
 
   public Lattice(int size) {
     mean = 0.0;
     this.size = size;
+    totalE = new double[size *size];
     box = new int[size][size];
     dE = 0.0;
 
@@ -38,7 +40,7 @@ class Lattice {
 
  /**
   * plotGlauber:
-  *     Method to call for plotting Glauber dynamics TODO finish
+  *     Method to call for plotting Glauber dynamics
   */
   public void flipGlauber(int size, double beta) {
     int count = 0;
@@ -48,13 +50,14 @@ class Lattice {
     mn = Spin.picks(size, 2);
 
     while (count < size * size) {
-      count ++;
 
       // check if energy meets threshold
       dE = Dynamics.metropolis(box, mn[0], mn[1]);
+      totalE[count] = dE;
       if (Dynamics.glauber(dE, beta)) {
         box[mn[0]][mn[1]] = -box[mn[0]][mn[1]];
       }
+      count ++;
     }
     mean = Stats.mean(box);
     sum = Stats.sum(box);
@@ -68,8 +71,12 @@ class Lattice {
     return sum;
   }
 
-  public double getDE() {
-    return dE;
+  public double getAveE() {
+    double sum = 0.0;
+    for (int i=0; i < totalE.length; i++){
+      sum += totalE[i];
+    }
+    return sum / (4.0 * size * size);
   }
 
   public int[] getSelectedSpin() {
@@ -86,7 +93,6 @@ class Lattice {
     // pick two random spins in lattice
     mn = Spin.picks(size, mn.length);
     while (count < size * size) {
-      count ++;
       if (Dynamics.nearestNeighbour(box, mn[0], mn[1], mn[2], mn[3]) &
           Dynamics.nearestNeighbour(box, mn[2], mn[3], mn[0], mn[1])) {
 
@@ -94,6 +100,7 @@ class Lattice {
         double dE_1 = Dynamics.metropolis(box, mn[2], mn[3]);
               // check if energy meets threshold
         dE = dE_0 + dE_1;
+        totalE[count] = dE;
 
         // check if energy meets threshold
         if (Dynamics.kawazaki(dE, beta)) {
@@ -101,6 +108,7 @@ class Lattice {
           box[mn[0]][mn[1]] = -box[mn[0]][mn[1]];
         }
       }
+      count ++;
     }
     this.mean = Stats.mean(box);
   }

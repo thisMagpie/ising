@@ -80,11 +80,11 @@ public class ArrayIO extends IO {
                                     double[] yData,
                                     double[] error) {
         for (int i = 0; i < xData.length; i++) {
-            toFile.write(xData[i] + " " + yData[i] + " " + error[i] +"\r\n");
+            toFile.write(xData[i] + " " + yData[i] + " " + error[i] + "\r\n");
         }
         toFile.close();
     }
- 
+
    /**
     * writeDoubles
     *                   Static method to write data from file with
