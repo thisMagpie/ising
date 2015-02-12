@@ -45,7 +45,6 @@ class Run {
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
       Lattice plot = new Lattice(size);
 
-      // Run graphics TODO only run on request
       switch (dynamics) {
         case "glauber":
           draw.runGlauber();
@@ -77,7 +76,7 @@ class Run {
           susceptability[nMeasurement] =  (alpha / Tplot ) * errorM[nMeasurement];
           errorM[nMeasurement] = Math.sqrt(errorM[nMeasurement]);
           heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * dE;
-          errorE[nMeasurement] = dE;
+          errorE[nMeasurement] = Math.sqrt(dE);
         }
       }
       try {
