@@ -29,7 +29,6 @@ class Run {
 
       double M1 = 0.0;
       double M2 = 0.0;
-      double chi = 0.0;
       int noSweeps = 100;
       int noMeasurements = 1000;
       double dE = 0.0;
