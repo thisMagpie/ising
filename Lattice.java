@@ -53,12 +53,13 @@ class Lattice {
 
       // check if energy meets threshold
       dE = Dynamics.metropolis(box, mn[0], mn[1]);
-      totalE[count] = dE;
+      //totalE[count] = dE;
       if (Dynamics.glauber(dE, beta)) {
         box[mn[0]][mn[1]] = -box[mn[0]][mn[1]];
       }
       count ++;
     }
+
     mean = Stats.mean(box);
     sum = Stats.sum(box);
   }
@@ -73,10 +74,16 @@ class Lattice {
 
   public double getAveE() {
     double sum = 0.0;
-    for (int i=0; i < totalE.length; i++){
-      sum += totalE[i];
+    for (int i=0; i < size; i++){
+      for(int j=0; j < size; j++){
+        int iup=i+1;
+        int jup=j+1;
+        if (iup < size && jup < size) {
+          sum -= box[i][j]*(box[iup][j]+box[i][jup]);
+        }
+      } 
     }
-    return sum / (4.0 * size * size);
+    return sum;
   }
 
   public int[] getSelectedSpin() {
@@ -113,4 +120,3 @@ class Lattice {
     this.mean = Stats.mean(box);
   }
 }
-
