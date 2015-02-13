@@ -93,8 +93,8 @@ class Run {
         susceptability[i] =  (M2 - (M1 * M1))/Tplot;
         errorM[i] = Math.sqrt(M2 - M1*M1);
         errorE[i] = Math.sqrt(E2 - E1*E1);
-      }  
-        
+      }
+
       try {
          System.out.println("\nWriting "+ dynamics + " to file... ");
          PrintWriter susc = IO.writeTo(dynamics+"_susceptability.dat");
