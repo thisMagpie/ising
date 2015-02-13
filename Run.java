@@ -56,6 +56,7 @@ class Run {
       }
 
       for (int i = 0; i < noSweeps; i++) {
+        flipDynamics(plot, dynamics, Tplot, size, k);
         // initialise measurement variables
         int nMeasurement = 0;
         M1 = 0.0;
@@ -71,7 +72,7 @@ class Run {
         }
 
         // Start taking measurements
-        for (int j = 1; j <= noMeasurements + 1; j++) {
+        for (int j = 0; j <= noMeasurements; j++) {
           flipDynamics(plot, dynamics, Tplot, size, k);
          if(j%10==0) {
             M1 += plot.getSum();
