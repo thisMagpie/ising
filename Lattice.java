@@ -78,9 +78,9 @@ class Lattice {
       for(int j=0; j < size; j++){
         int iup=i+1;
         int jup=j+1;
-        if (iup < size && jup < size) {
+        if(i==size-1) iup=0;
+        if(j==size-1) jup=0;
           sum -= box[i][j]*(box[iup][j]+box[i][jup]);
-        }
       } 
     }
     return sum;
@@ -92,7 +92,7 @@ class Lattice {
 
  /**
   * flipKawazaki:
-  *     Method to call for plotting Kawazaki dynamics
+  *               Method to call for plotting Kawazaki dynamics
   */
   public void flipKawazaki(int size, double beta) {
     int count = 0;
@@ -105,7 +105,7 @@ class Lattice {
 
         double dE_0 = Dynamics.metropolis(box, mn[0], mn[1]);
         double dE_1 = Dynamics.metropolis(box, mn[2], mn[3]);
-              // check if energy meets threshold
+        // check if energy meets threshold
         dE = dE_0 + dE_1;
         totalE[count] = dE;
 
@@ -120,3 +120,4 @@ class Lattice {
     this.mean = Stats.mean(box);
   }
 }
+

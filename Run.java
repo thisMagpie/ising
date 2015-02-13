@@ -31,8 +31,8 @@ class Run {
       double M2 = 0.0;
       double E1 = 0.0;
       double E2 = 0.0;
-      int noSweeps = 15;
-      int noMeasurements = 5000;
+      int noSweeps = 20;
+      int noMeasurements = 10000;
       double dE = 0.0;
 
       double[] susceptability = new double[noSweeps];
@@ -41,7 +41,7 @@ class Run {
       double[] errorM = new double[noSweeps];
       double[] errorE = new double[noSweeps];
 
-      int noEquilibration = 100;
+      int noEquilibration = 1000;
 
       DrawLattice draw = new DrawLattice(size, beta, dynamics);
       Lattice plot = new Lattice(size);
@@ -128,3 +128,4 @@ class Run {
      }
   }
 }
+
