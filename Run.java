@@ -80,8 +80,8 @@ class Run {
       }
       try {
          System.out.println("\nWriting "+ dynamics + " to file... ");
-         PrintWriter susc = IO.writeTo("susceptability.dat");
-         PrintWriter hc = IO.writeTo("heat_capacity.dat");
+         PrintWriter susc = IO.writeTo(dynamics+"_susceptability.dat");
+         PrintWriter hc = IO.writeTo(dynamics+"_heat_capacity.dat");
          ArrayIO.writeDoubles(susc, t, susceptability, errorM);
          ArrayIO.writeDoubles(hc, t, heatCapacity, errorE);
          System.out.println("\nFile written. ");
@@ -111,4 +111,3 @@ class Run {
      }
   }
 }
-
