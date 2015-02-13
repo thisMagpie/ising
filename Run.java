@@ -22,22 +22,24 @@ class Run {
     if(args.length == 3) {
       int size = Integer.parseInt(args[0]);
       double T = Double.parseDouble(args[1]);
-      double Tplot = 10.0;
+      double Tplot = 3.0;
       String dynamics = args[2];
       double beta = (1.0 /(k * T));
       double alpha = 1.0 /(k * size * size );
 
       double M1 = 0.0;
       double M2 = 0.0;
-      int noSweeps = 100;
-      int noMeasurements = 1000;
+      double E1 = 0.0;
+      double E2 = 0.0;
+      int noSweeps = 15;
+      int noMeasurements = 5000;
       double dE = 0.0;
 
-      double[] susceptability = new double[noMeasurements];
+      double[] susceptability = new double[noSweeps];
       double[] t = new double[noSweeps];
-      double[] heatCapacity = new double[noMeasurements];
-      double[] errorM = new double[noMeasurements];
-      double[] errorE = new double[noMeasurements];
+      double[] heatCapacity = new double[noSweeps];
+      double[] errorM = new double[noSweeps];
+      double[] errorE = new double[noSweeps];
 
       int noEquilibration = 100;
 
@@ -53,31 +55,46 @@ class Run {
           break;
       }
 
-      // Plotting stuff
-      flipDynamics(plot, dynamics, Tplot, size, k);
       for (int i = 0; i < noSweeps; i++) {
+        // initialise measurement variables
+        int nMeasurement = 0;
+        M1 = 0.0;
+        M2 = 0.0;
+        E1 = 0.0;
+        E2 = 0.0;
         Tplot-= 0.1;
         t[i] = Tplot;
-        int nMeasurement = 0;
+
+        // Equilibration for loop
         for (int j = 0; j < noEquilibration; j++) {
           flipDynamics(plot, dynamics, Tplot, size, k);
         }
-      }
-      int nMeasurement = 0;
-      for (int j = 1; j <= noMeasurements + 1; j++) {
-        flipDynamics(plot, dynamics, Tplot, size, k);
-        if(j%10==0) {
-          M1 = plot.getSum() / (size * size);
-          M2 = (plot.getSum() * plot.getSum())/ (size * size);
-          dE = Math.abs(plot.getAveE());
-          nMeasurement ++;
-          errorM[nMeasurement] = Math.abs(M2 - (M1 * M1));
-          susceptability[nMeasurement] =  (alpha / Tplot ) * errorM[nMeasurement];
-          errorM[nMeasurement] = Math.sqrt(errorM[nMeasurement]);
-          heatCapacity[nMeasurement] = (alpha / (Tplot * Tplot)) * dE;
-          errorE[nMeasurement] = Math.sqrt(dE);
+
+        // Start taking measurements
+        for (int j = 1; j <= noMeasurements + 1; j++) {
+          flipDynamics(plot, dynamics, Tplot, size, k);
+         if(j%10==0) {
+            M1 += plot.getSum();
+            M2 += (plot.getSum() * plot.getSum());
+            E1 += plot.getAveE();
+            E2 += plot.getAveE()*plot.getAveE();
+            nMeasurement ++;
+          }
         }
-      }
+
+        // divide average by number of measurements
+        E1 /= (double)(nMeasurement);
+        E2 /= (double)(nMeasurement);
+        M1 /= (double)(nMeasurement);
+        M2 /= (double)(nMeasurement);
+
+        //for a given temperature specific heat is (E2-E1*E1)/(t[i]*t[i])
+        heatCapacity[i] = (E2 - E1*E1)/(Tplot*Tplot);
+        susceptability[i] =  (M2 - (M1 * M1))/Tplot;
+        errorM[i] = Math.sqrt(M2 - M1*M1);
+        errorE[i] = Math.sqrt(E2 - E1*E1);
+      }  
+        
       try {
          System.out.println("\nWriting "+ dynamics + " to file... ");
          PrintWriter susc = IO.writeTo(dynamics+"_susceptability.dat");
