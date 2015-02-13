@@ -53,5 +53,15 @@ class Spin {
       array[i] = (int) (Math.random() * size); 
     return array;
   }
+
+  public static int[][] swap(int[][] box, int[] mn) {
+    int[][] tempA = box;
+    int[][] tempB = box;
+    tempA[mn[0]][mn[1]] = box[mn[0]][mn[1]];
+    tempB[mn[2]][mn[3]] = box[mn[2]][mn[3]];
+    box[mn[0]][mn[1]] = tempB[mn[2]][mn[3]];
+    box[mn[2]][mn[3]] = tempA[mn[0]][mn[1]];
+    return box;
+  }
 }
 

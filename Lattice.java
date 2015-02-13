@@ -111,8 +111,7 @@ class Lattice {
 
         // check if energy meets threshold
         if (Dynamics.kawazaki(dE, beta)) {
-          box[mn[2]][mn[3]] = -box[mn[2]][mn[3]];
-          box[mn[0]][mn[1]] = -box[mn[0]][mn[1]];
+          box = Spin.swap(box, mn);
         }
       }
       count ++;

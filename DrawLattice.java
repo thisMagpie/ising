@@ -127,8 +127,7 @@ class DrawLattice extends Canvas {
 
         // check if energy meets threshold
         if (Dynamics.kawazaki((dE_0 + dE_1), beta)) {
-          box[spins[2]][spins[3]] = -box[spins[2]][spins[3]];
-          box[spins[0]][spins[1]] = -box[spins[0]][spins[1]];
+          box = Spin.swap(box, spins);
           paintPixels(spins[0], spins[1]);
           paintPixels(spins[2], spins[3]);
           repaint();
